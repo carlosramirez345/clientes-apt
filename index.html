@@ -63,7 +63,7 @@
       document.getElementById("comentario").value = "";
     }
 
-    function mostrarClientes() {
+   function mostrarClientes() {
   const contenedor = document.getElementById("lista-clientes");
   contenedor.innerHTML = "";
   clientes.forEach((c, i) => {
@@ -77,9 +77,16 @@
       <div><strong>Estado:</strong> ${c.estado}</div>
       <button onclick="cambiarEstado(${i}, 'Aceptado')">✅ Aceptar</button>
       <button onclick="cambiarEstado(${i}, 'Descartado')">❌ Descartar</button>
+      <button onclick="eliminarCliente(${i})">🗑️ Eliminar</button>
     `;
     contenedor.appendChild(div);
   });
+}
+
+function eliminarCliente(index) {
+  clientes.splice(index, 1);
+  localStorage.setItem("clientes", JSON.stringify(clientes));
+  mostrarClientes();
 }
 
     function cambiarEstado(index, nuevoEstado) {
@@ -90,5 +97,6 @@
   </script>
 </body>
 </html>
+
 
 

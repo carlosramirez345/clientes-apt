@@ -64,22 +64,23 @@
     }
 
     function mostrarClientes() {
-      const contenedor = document.getElementById("lista-clientes");
-      contenedor.innerHTML = "";
-      clientes.forEach((c, i) => {
-        const div = document.createElement("div");
-        div.className = "cliente";
-        div.innerHTML = `
-          <strong>${c.nombre}</strong><br>
-          📱 ${c.celular} | 🚗 ${c.vehiculo}<br>
-          📝 ${c.comentario || "Sin comentario"}<br>
-          Estado: <strong>${c.estado}</strong><br>
-          <button onclick="cambiarEstado(${i}, 'Aceptado')">✅ Aceptar</button>
-          <button onclick="cambiarEstado(${i}, 'Descartado')">❌ Descartar</button>
-        `;
-        contenedor.appendChild(div);
-      });
-    }
+  const contenedor = document.getElementById("lista-clientes");
+  contenedor.innerHTML = "";
+  clientes.forEach((c, i) => {
+    const div = document.createElement("div");
+    div.className = "cliente";
+    div.innerHTML = `
+      <div><strong>Nombre:</strong> ${c.nombre}</div>
+      <div><strong>Celular:</strong> ${c.celular}</div>
+      <div><strong>Vehículo:</strong> ${c.vehiculo}</div>
+      <div><strong>Comentario:</strong> ${c.comentario || "Sin comentario"}</div>
+      <div><strong>Estado:</strong> ${c.estado}</div>
+      <button onclick="cambiarEstado(${i}, 'Aceptado')">✅ Aceptar</button>
+      <button onclick="cambiarEstado(${i}, 'Descartado')">❌ Descartar</button>
+    `;
+    contenedor.appendChild(div);
+  });
+}
 
     function cambiarEstado(index, nuevoEstado) {
       clientes[index].estado = nuevoEstado;
@@ -89,4 +90,5 @@
   </script>
 </body>
 </html>
+
 

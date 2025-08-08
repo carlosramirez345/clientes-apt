@@ -63,13 +63,13 @@
       document.getElementById("comentario").value = "";
     }
 
-   function mostrarClientes() {
+    function mostrarClientes() {
   const contenedor = document.getElementById("lista-clientes");
   contenedor.innerHTML = "";
   clientes.forEach((c, i) => {
     const div = document.createElement("div");
     div.className = "cliente";
-   div.innerHTML = `
+    div.innerHTML = `
   <div><strong>Nombre:</strong> ${c.nombre}</div>
   <div><strong>Celular:</strong> ${c.celular}</div>
   <div><strong>Vehículo:</strong> ${c.vehiculo}</div>
@@ -99,6 +99,7 @@ function eliminarCliente(index) {
   </script>
 </body>
 </html>
+
 
 
 

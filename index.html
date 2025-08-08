@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gestión de Clientes</title>
+  <style>
+    body { font-family: Arial; padding: 20px; background: #f7f7f7; }
+    input, textarea, button { margin: 5px 0; display: block; padding: 8px; width: 100%; max-width: 400px; }
+    .cliente { background: #fff; padding: 10px; margin-top: 10px; border: 1px solid #ccc; border-radius: 5px; }
+    .cliente button { width: auto; margin-right: 10px; }
+  </style>
+</head>
+<body>
+  <h2>Registro de Clientes</h2>
+  <input id="nombre" placeholder="Nombre del cliente">
+  <input id="celular" placeholder="Número celular">
+  <input id="vehiculo" placeholder="Vehículo de interés">
+  <textarea id="comentario" placeholder="Comentario adicional"></textarea>
+  <button onclick="agregarCliente()">Agregar Cliente</button>
+
+  <div id="lista-clientes"></div>
+
+  <script>
+    const googleScriptURL = 'https://script.google.com/macros/s/AKfycbwEZbQoK_nNSvqctNqmgaVGl9h2Um__aKuE7pD_EiLzgf-BzOgZnX0tHFylaSx_2SWBZQ/exec';
+
+    let clientes = JSON.parse(localStorage.getItem("clientes") || "[]");
+    mostrarClientes();
+
+    function agregarCliente() {
+      const nombre = document.getElementById("nombre").value;
+      const celular = document.getElementById("celular").value;
+      const vehiculo = document.getElementById("vehiculo").value;
+      const comentario = document.getElementById("comentario").value;
+      const estado = "Pendiente";
+
+      if (!nombre || !celular || !vehiculo) {
+        alert("Completa todos los campos obligatorios.");
+        return;
+      }
+
+      const cliente = { nombre, celular, vehiculo, comentario, estado };
+      clientes.push(cliente);
+      localStorage.setItem("clientes", JSON.stringify(clientes));
+      mostrarClientes();
+
+      // Enviar a Google Sheets
+      fetch(googleScriptURL, {
+        method: 'POST',
+        body: JSON.stringify(cliente),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(res => res.text())
+      .then(resp => console.log('Enviado a Google Sheets:', resp))
+      .catch(err => console.error('Error al enviar:', err));
+
+      // Limpiar campos
+      document.getElementById("nombre").value = "";
+      document.getElementById("celular").value = "";
+      document.getElementById("vehiculo").value = "";
+      document.getElementById("comentario").value = "";
+    }
+
+    function mostrarClientes() {
+      const contenedor = document.getElementById("lista-clientes");
+      contenedor.innerHTML = "";
+      clientes.forEach((c, i) => {
+        const div = document.createElement("div");
+        div.className = "cliente";
+        div.innerHTML = `
+          <strong>${c.nombre}</strong><br>
+          📱 ${c.celular} | 🚗 ${c.vehiculo}<br>
+          📝 ${c.comentario || "Sin comentario"}<br>
+          Estado: <strong>${c.estado}</strong><br>
+          <button onclick="cambiarEstado(${i}, 'Aceptado')">✅ Aceptar</button>
+          <button onclick="cambiarEstado(${i}, 'Descartado')">❌ Descartar</button>
+        `;
+        contenedor.appendChild(div);
+      });
+    }
+
+    function cambiarEstado(index, nuevoEstado) {
+      clientes[index].estado = nuevoEstado;
+      localStorage.setItem("clientes", JSON.stringify(clientes));
+      mostrarClientes();
+    }
+  </script>
+</body>
+</html>
+
